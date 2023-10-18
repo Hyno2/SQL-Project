@@ -1,0 +1,70 @@
+시퀀스 생성 
+상품 테이블 PRODUCT
+분류코드 PK 
+분류이름 :즉석,음료,식품,과자,아이스
+INSERT INTO PRODUCT VALUES(001,즉석식품);
+INSERT INTO PRODUCT VALUES(002,음료);
+INSERT INTO PRODUCT VALUES(003,식품);
+INSERT INTO PRODUCT VALUES(004,과자);
+INSERT INTO PRODUCT VALUES(005,아이스);
+
+
+음식 테이블
+분류코드 VARCHAR2(20) 상품테이블에 분류코드를 참조한다 FK
+음식자체코드 VARCHAR2(20), PK
+음식 이름 VARCHAR2(20),
+가격 INT,
+제조사 VARCHAR2(30)
+ 
+INSERT INTO FOOD VALUES();
+
+재고 테이블
+재고 코드 음식자체코드를 참조한다 FK 
+재고수량 INT 
+
+프로시저
+조회 
+1. 이름으로 조회검색
+SELECT * FROM 음식 JOIN 조회 
+ON 음식 음식코드=조회코드 WHERE 음식.이름 = '';
+
+2. 코드로 조회검색
+SELECT * FROM 음식 JOIN 조회 
+ON 음식 음식코드=조회코드 WHERE 음식.코드= ''
+
+3. 회사별  가장 비싼 상품 출력
+
+4. 회사별 가장 싼 상품 출력
+
+
+
+수정
+1. 음식 가격수정
+
+2. 음식 재고량수정
+ 
+
+ 삭제
+1. 데이터 전체 삭제
+2. 
+
+
+	트리거
+1. 트리거 INSERT 
+상품 추가 했습니다
+
+2. 트리거 재고 수정할때마다 
+재고량 수정되었습니다
+
+3. 트리거 가격 수정할때마다
+가격 수정되었습니다
+
+4. 트리거 데이터 삭제할때마다 
+데이터 삭제되었습니다
+
+
+
+
+
+
+
