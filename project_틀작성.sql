@@ -1,3 +1,4 @@
+SET SERVEROUTPUT ON;
 DROP TABLE CATEGORY;
 DROP TABLE COMPANY;
 DROP TABLE INVENTORY;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
@@ -186,13 +187,93 @@ EXEC UPDATE_PRICE(9000,'후라이드치킨');
 SELECT NAME,PRICE FROM INVENTORY;
 ---------------------- 삭제 ------------------------------------
 -- 1. 전체 데이터 삭제
+CREATE OR REPLACE PROCEDURE DELETE_ALL
+IS BEGIN
+    DELETE FROM INVENTORY;
+END DELETE_ALL;
+/
+-- 전체데이터(INVENTORY) 삭제 프로시저 호출
+EXEC DELETE_ALL();
+-- INVENTORY 확인 출력
+SELECT * FROM INVENTORY;
+-- 프로시저 삭제 
+DROP PROCEDURE DELETE_ALL;
 
--- 2. 제품 데이터삭제
-
+-- 2. 제품 데이터삭제 - 이름으로
+CREATE OR REPLACE PROCEDURE DELETE_NAME(
+    DEL_NAME IN VARCHAR2
+)
+IS BEGIN
+    DELETE FROM INVENTORY WHERE NAME = DEL_NAME;
+END DELETE_NAME;
+/
+--상품명 삭제 프로시저 호출
+EXEC DELETE_NAME('소시지바'); -- 데이터 임의로 넣어놓음
+-- INVENTORY 확인 출력
+SELECT * FROM INVENTORY;
+--프로시저 삭제
+DROP PROCEDURE DELETE_NAME;
 
 ------------------ 트리거 ------------------------------
 -- 1. 각각 추가될때 '데이터 추가되었습니다.'
+-- COMPANY 테이블 추가
+CREATE OR REPLACE TRIGGER ALARM_INSERT_COMPANY
+BEFORE INSERT ON COMPANY     
+FOR EACH ROW
+DECLARE BEGIN
+    DBMS_OUTPUT.PUT_LINE('데이터가 추가되었습니다.');
+END; 
+/
+DROP TRIGGER ALARM_INSERT_COMPANY;
+
+-- IVENTORY 테이블 추가
+CREATE OR REPLACE TRIGGER ALARM_INSERT_INVENTORY
+BEFORE INSERT ON INVENTORY    
+FOR EACH ROW
+DECLARE BEGIN
+    DBMS_OUTPUT.PUT_LINE('데이터가 추가되었습니다.');
+END; 
+/
+DROP TRIGGER ALARM_INSERT_INVENTORY;
 
 -- 2. 각각 수정될떄 '데이터 수정되었습니다.'
+-- COMPANY 테이블 수정
+CREATE OR REPLACE TRIGGER ALARM_UPDATE_COMPANY
+BEFORE UPDATE ON COMPANY     
+FOR EACH ROW
+DECLARE BEGIN
+    DBMS_OUTPUT.PUT_LINE('데이터가 수정되었습니다.');
+END; 
+/
+DROP TRIGGER ALARM_UPDATE_COMPANY;
+-- IVENTORY 테이블 수정
+CREATE OR REPLACE TRIGGER ALARM_UPDATE_INVENTORY
+BEFORE UPDATE ON INVENTORY    
+FOR EACH ROW
+DECLARE BEGIN
+    DBMS_OUTPUT.PUT_LINE('데이터가 수정되었습니다.');
+END; 
+/
+DROP TRIGGER ALARM_UPDATE_INVENTORY;
 
 -- 3. 각각 삭제될때 '데이터 삭제되었습니다.'
+-- COMPANY 테이블 삭제
+CREATE OR REPLACE TRIGGER ALARM_DELETE_COMPANY
+BEFORE DELETE ON COMPANY     
+FOR EACH ROW
+DECLARE BEGIN
+    DBMS_OUTPUT.PUT_LINE('데이터가 삭제되었습니다.');
+END; 
+/
+DROP TRIGGER ALARM_DELETE_COMPANY;
+-- IVENTORY 테이블 삭제
+CREATE OR REPLACE TRIGGER ALARM_DELETE_INVENTORY
+BEFORE DELETE ON INVENTORY    
+FOR EACH ROW
+DECLARE BEGIN
+    DBMS_OUTPUT.PUT_LINE('데이터가 삭제되었습니다.');
+END; 
+/
+DROP TRIGGER ALARM_DELETE_INVENTORY;
+
+COMMIT;
