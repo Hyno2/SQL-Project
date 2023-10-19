@@ -5,10 +5,11 @@ CREATE VIEW ALL_INFO AS
 SELECT KIND, NAME, PRICE, CNT, COMPANY, FOOD_CODE 음식코드 FROM COMPANY, CATEGORY, INVENTORY WHERE INVENTORY.FOOD_CODE = COMPANY.CODE AND CATEGORY.CODE = INVENTORY.CATEGORY_CODE;
 -- 만들어진 뷰 조회(뷰 이름 : ALL_INFO)
 SELECT * FROM ALL_INFO;
--- 회사별 가장 비싼 상품 회사명, 상품이름, 가격 , 재고량 출력하기
-SELECT COMPANY, MAX(PRICE) FROM ALL_INFO GROUP BY COMPANY; --> 아직 이건안댐
-
--- 이름으로 '딸기' 일 경우 검색 후 음식코드 ,종류 ,음식명 ,가격 ,재고량 ,제조사 출력하기
+-- 회사별 상품 종류
+SELECT COMPANY, COUNT(*) 상품종류 FROM ALL_INFO GROUP BY COMPANY;
+-- 회사별 상품이 3개 종류 이상 출력
+SELECT COMPANY, COUNT(*) 상품종류 FROM ALL_INFO GROUP BY COMPANY HAVING COUNT(*) >= 3;
+-- 특정 이름을 검색 후(EX.딸기) 음식코드 ,종류 ,음식명 ,가격 ,재고량 ,제조사 출력하기
 SELECT * FROM ALL_INFO WHERE NAME LIKE '%딸기%'; 
 -- 제일 낮은 가격의 상품 정보를 출력하기 (중첩질의문 사용)
 SELECT * FROM ALL_INFO WHERE PRICE = (SELECT MIN(PRICE) FROM ALL_INFO);
