@@ -1,9 +1,10 @@
 -- 트리거 사용하기위해 서버 아웃풋을 ON 시킨다
 SET SERVEROUTPUT ON;
 
+DROP TABLE INVENTORY;
 DROP TABLE CATEGORY;
 DROP TABLE COMPANY;
-DROP TABLE INVENTORY;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
 DROP SEQUENCE FOOD_BARCODE;         -- 상품코드 시퀀스 
 DROP SEQUENCE INVENTORY_BARCODE;    -- 인벤토리 시퀀스
@@ -168,8 +169,10 @@ END INSERT_INVENTORY;
 -- INVENTORY 테이블에 데이터 추가하는 프로시저 호출 
 EXEC INSERT_INVENTORY('테스트까까','AB01',INVENTORY_BARCODE.NEXTVAL,1,3000);
 
+
 -- 프로시저 삭제
 DROP PROCEDURE INSERT_INVENTORY;
+
 
 -- 2. 재고 수정
 -- 어떤 상품의 재고를 수정 할 것인가? 이름쳐서 재고수정
@@ -182,8 +185,8 @@ IS BEGIN
 UPDATE INVENTORY SET CNT = UPDATE_CNT WHERE NAME = SEARCH_NAME;
 END UPDATE_CNT;
 /
--- 상품의 이름이 조건에 맞을때에 재고량을 수정하는 프로시저 호출
-EXEC UPDATE_CNT(2,'후라이드치킨'); -- 수정할 재고량, 검색할 제품명
+-- 상품의 이름이 조건에 맞을때에 재고량을 수정하는 프로시저 호출 수정할 재고량, 검색할 제품명
+EXEC UPDATE_CNT(2,'후라이드치킨'); 
 
 -- 재고 확인 출력
 SELECT NAME,CNT FROM INVENTORY;
@@ -236,7 +239,8 @@ IS BEGIN
 END DELETE_NAME;
 /
 --상품명 삭제 프로시저 호출
-EXEC DELETE_NAME('소시지바'); -- 데이터 임의로 넣어놓음
+-- 데이터 임의로 넣어놓음
+EXEC DELETE_NAME('후라이드치킨'); 
 -- INVENTORY 확인 출력
 SELECT * FROM INVENTORY;
 --프로시저 삭제
