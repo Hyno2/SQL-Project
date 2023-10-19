@@ -1,4 +1,6 @@
+-- 트리거 사용하기위해 서버 아웃풋을 ON 시킨다
 SET SERVEROUTPUT ON;
+
 DROP TABLE CATEGORY;
 DROP TABLE COMPANY;
 DROP TABLE INVENTORY;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
@@ -47,7 +49,6 @@ INSERT INTO COMPANY(COMPANY) VALUES ('PB');
 INSERT INTO COMPANY(COMPANY) VALUES ('PB');
 INSERT INTO COMPANY(COMPANY) VALUES ('PB');
 INSERT INTO COMPANY(COMPANY) VALUES ('PB');
-
 -- 과자 데이터 추가
 INSERT INTO COMPANY(COMPANY) VALUES ('크라운');
 INSERT INTO COMPANY(COMPANY) VALUES ('오리온');
@@ -110,46 +111,68 @@ SELECT * FROM INVENTORY;
 
 COMMIT;
 -------------------------------------조회-------------------------------------
--- 1. 모든 테이블 JOIN해서 모두 조회
---SELECT CATEGORY.CODE 상품코드, CATEGORY.KIND 상품분류,
---INVENTORY.CODE 음식코드, INVENTORY.CNT 재고량,
--- INVENTORY.NAME 음식명, INVENTORY.PRICE 가격, COMPANY.COMPANY 제조사 
---FROM CATEGORY, INVENTORY, COMPANY 
---WHERE INVENTORY.FOOD_CODE = CATEGORY.code and COMPANY.CATEGORY_CODE = INVENTORY.code; 
---commit;
---
----- 2.회사별 가장 비싼 상품 회사명, 상품이름, 가격 , 재고량 출력하기
---SELECT COMPANY 제조사, INVENTORY.NAME 상품명, MAX(PRICE) 최고가격 FROM FOOD,INVENTORY WHERE FOOD.CATEGORY_CODE = INVENTORY.code
---GROUP BY COMPANY, NAME ;
---COMMIT;
-
--- 3. 이름으로 ''일 경우 검색 후 음식코드,음식명,가격,재고량,제조사 출력하기
-
-
+-- 모든 테이블 JOIN해서 모두 조회
+SELECT * FROM INVENTORY JOIN COMPANY ON INVENTORY.FOOD_CODE = COMPANY.CODE JOIN CATEGORY ON CATEGORY.CODE = INVENTORY.CATEGORY_CODE; 
+-- 모든 테이블 조회 하면 겹치는 속성값(상품코드,카테고리코드)도 나오니까 필요한 정보들만 속성 뽑아서 뷰 만들기.
+CREATE VIEW ALL_INFO AS
+SELECT KIND, NAME, PRICE, CNT, COMPANY, FOOD_CODE 음식코드 FROM COMPANY, CATEGORY, INVENTORY WHERE INVENTORY.FOOD_CODE = COMPANY.CODE AND CATEGORY.CODE = INVENTORY.CATEGORY_CODE;
+-- 만들어진 뷰 조회(뷰 이름 : ALL_INFO)
+SELECT * FROM ALL_INFO;
+-- 회사별 상품 종류
+SELECT COMPANY, COUNT(*) 상품종류 FROM ALL_INFO GROUP BY COMPANY;
+-- 회사별 상품이 3개 종류 이상 출력
+SELECT COMPANY, COUNT(*) 상품종류 FROM ALL_INFO GROUP BY COMPANY HAVING COUNT(*) >= 3;
+-- 특정 이름을 검색 후(EX.딸기) 음식코드 ,종류 ,음식명 ,가격 ,재고량 ,제조사 출력하기
+SELECT * FROM ALL_INFO WHERE NAME LIKE '%딸기%'; 
+-- 제일 낮은 가격의 상품 정보를 출력하기 (중첩질의문 사용)
+SELECT * FROM ALL_INFO WHERE PRICE = (SELECT MIN(PRICE) FROM ALL_INFO);
 -------------------------- 수정-----------------------------------------
--- 1. 품목 새로 생길때 INVENTORY 테이블에 insert 하는프로시저 만들기
+-- 1. 품목 새로 생길때 INVENTORY 테이블에 insert 하는 2개 프로시저 만들기 
+-- 주의 생성할때 프로시저 두개다 만들어야함 한개만하면 바코드 꼬인다
+-- COMPANY는 되는데 INVENTORY가 안된다
+
+-- COMPANY 테이블 데이터 추가
+CREATE OR REPLACE PROCEDURE INSERT_COMPANY
+(
+    INSERT_CODE INT,
+    INSERT_COMPANY VARCHAR2
+)
+IS BEGIN
+INSERT INTO COMPANY (CODE,COMPANY) VALUES(INSERT_CODE,INSERT_COMPANY);
+END INSERT_COMPANY;
+/
+
+-- 프로시저 호출
+EXEC INSERT_COMPANY(FOOD_BARCODE.NEXTVAL,'테스트회사');
+
+-- 확인 출력
+SELECT * FROM COMPANY;
+
+-- 프로시저 삭제
+DROP PROCEDURE INSERT_COMPANY;
+
+-- INVENTORY가 안된다 
 -- INVENTORY 테이블 데이터 추가
 CREATE OR REPLACE PROCEDURE INSERT_INVENTORY
 (
-    UPDATE_NAME IN VARCHAR2,
-    UPDATE_CGCODE VARCHAR2,
-    UPDATE_FCODE INT,
-    UPDATE_CNT INT,
-    UPDATE_PRICE INT
+    INSERT_NAME VARCHAR2,   -- 상품명
+    INSERT_CGCODE VARCHAR2, -- 카테고리코드 분류코드
+    INSERT_FCODE INT,       -- 상품코드
+    INSERT_CNT INT,         -- 재고량
+    INSERT_PRICE INT        -- 가격
 )
-IS BEGIN 
-INSERT INTO INVENTORY (NAME,category_code,food_code,cnt,price) VALUES(UPDATE_NAME,UPDATE_CGCODE,UPDATE_FCODE,UPDATE_CNT,UPDATE_PRICE);
+IS BEGIN
+INSERT INTO INVENTORY (NAME,CATEGORY_CODE,FOOD_CODE,CNT,PRICE) VALUES(INSERT_NAME,INSERT_CGCODE,INSERT_FCODE,INSERT_CNT,INSERT_PRICE);
 END INSERT_INVENTORY;
 /
+-- INVENTORY 테이블에 데이터 추가하는 프로시저 호출 
+EXEC INSERT_INVENTORY('테스트까까','AB01',INVENTORY_BARCODE.NEXTVAL,1,3000);
 
--- INVENTORY 테이블에 데이터 추가하는 프로시저 호출 (값 입력 후 호출 INVENTORY테이블 데이터 추가됌)
-EXEC INSERT_INVENTORY('즉석식품','AB01',INVENTORY_BARCODE.NEXTVAL, 1, 3000); --상품명, 분류코드 ,음식코드 ,재고량, 가격
 -- 프로시저 삭제
 DROP PROCEDURE INSERT_INVENTORY;
 
 -- 2. 재고 수정
 -- 어떤 상품의 재고를 수정 할 것인가? 이름쳐서 재고수정
-
 CREATE OR REPLACE PROCEDURE UPDATE_CNT
 (
     UPDATE_CNT INT,
@@ -160,7 +183,7 @@ UPDATE INVENTORY SET CNT = UPDATE_CNT WHERE NAME = SEARCH_NAME;
 END UPDATE_CNT;
 /
 -- 상품의 이름이 조건에 맞을때에 재고량을 수정하는 프로시저 호출
-EXEC UPDATE_CNT(2,'후라이드치킨');
+EXEC UPDATE_CNT(2,'후라이드치킨'); -- 수정할 재고량, 검색할 제품명
 
 -- 재고 확인 출력
 SELECT NAME,CNT FROM INVENTORY;
@@ -182,9 +205,14 @@ END UPDATE_PRICE;
 /
 
 -- 상품의 이름이 조건에 맞을때에 가격을 수정하는 프로시저 호출
-EXEC UPDATE_PRICE(9000,'후라이드치킨');
+EXEC UPDATE_PRICE(9000,'후라이드치킨'); -- 수정할가격, 검색할제품명
+
 -- 재고 확인 출력
 SELECT NAME,PRICE FROM INVENTORY;
+
+-- 프로시저 삭제
+DROP PROCEDURE UPDATE_PRICE;
+
 ---------------------- 삭제 ------------------------------------
 -- 1. 전체 데이터 삭제
 CREATE OR REPLACE PROCEDURE DELETE_ALL
