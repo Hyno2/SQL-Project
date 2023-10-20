@@ -70,17 +70,19 @@ SELECT 칼럼명 FROM 테이블명;
 
 -- 4. RENAME 테이블명 변경
 --	ALTER TABLE 테이블명 RENAME TO 바꿀테이블명
+
 --    RENAME COLUMN 컬렴명 변경하기
 --	ALTER TABLE 테이블명 RENAME COLUMN 원래컬럼명 TO 바꿀컬럼명;
 
--- DROP, TRUNCATE 테이블 삭제
+-- 5. DROP, TRUNCATE 테이블 삭제
 -- DROP : 테이블 삭제(데이터, 테이블 구조 모두 삭제)
 -- TRUNCATE : 테이블안의 데이터 삭제 (데이터만 전체 삭제, 테이블 구조는 남아있다)
---          DROP OR TRUNCATE TABLE 테이블명
+--          DROP TABLE 테이블명; 
+	 TRUNCATE TABLE 테이블명;
 
 
 -- DML :(Manipulation) : 데이터 조작 ,직접적으로 데이터조작
---      => INSERT(삽입), UPDATE(수정), DELETE(삭제), (+SELECT)DQL DML 둘다 포함됌
+--      => INSERT(삽입), UPDATE(수정), DELETE(삭제), (SELECT)DQL DML 둘다 포함됌
 
 --  INSERT 데이터 삽입
 --	 INSERT INTO 테이블명 (속성값1,속성값2,..) VALUES(데이터1값,데이터2값,..);
@@ -93,7 +95,7 @@ SELECT 칼럼명 FROM 테이블명;
 --	DELETE FROM 테이블명 WHERE 조건문;
 
 -- COMMIT : 변경사항을 영구적으로 적용
--- COMMIT을 하지 않으면, 계저에 적용하였던 모든 변경사항이 날아간다
+-- COMMIT을 하지 않으면, 계정에 적용하였던 모든 변경사항이 날아간다
 -- 계정에 적용한 변경사항 중 중요한 내용이 있으면 되도록 COMMIT하는게 좋음
 --	COMMIT;
 
@@ -110,18 +112,20 @@ create sequence 시퀀스명;
 시퀀스명.currval 현재 숫자
 --시퀀스 값 바꾸는 법
 --1. 지운다.
-drop sequence mymusic;
+drop sequence 시퀀스명;
 --2. 새로 만들되, 내가 시작하고 싶은 번호부터 시작하도록 한다.
-create sequence mymusic start with 7 increment by 1;
+create sequence 시퀀스명 start with 7 increment by 1;
 
 PK 기본키
 데이터가 중복되지않는 것을 삼는다
 테이블 생성할때 뒤에 PRIMARY KEY
 
 FK 외래키 참조한다
+
 1.
 ALTER TABLE 테이블명 ADD CONSTRAINT 외래키명 FOREIGN KEY(참조할칼럼명)
 REFERENCES 참조할테이블(참조 할 칼럼명);
+
 2.
 테이블 생성할때 뒤에 REFERENCES 참조할테이블(참조할칼럼명)
 
@@ -183,7 +187,7 @@ HAVING GROUP BY에서 조건문줄때 사용한다 WHERE절과 같은 의미
 
 총합 SUM(칼럼명) 
 
-성별별 평균 나이 출력하기 
+성별 평균 나이 출력하기 
 SELECT 성별칼럼, AVG(나이칼럼) FROM 테이블명 GROUP BY 성별칼럼;
 
 LIKE 포함된문자나 숫자 찾을때
