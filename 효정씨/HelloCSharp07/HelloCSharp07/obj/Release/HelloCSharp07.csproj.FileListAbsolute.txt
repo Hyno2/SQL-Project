@@ -1,0 +1,10 @@
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\bin\Release\HelloCSharp07.exe.config
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\bin\Release\HelloCSharp07.exe
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\bin\Release\HelloCSharp07.pdb
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.csproj.AssemblyReference.cache
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.Form1.resources
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.Properties.Resources.resources
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.csproj.GenerateResource.cache
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.csproj.CoreCompileInputs.cache
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.exe
+D:\work\AI11_lecture\CSharp\HelloCSharp07\HelloCSharp07\obj\Release\HelloCSharp07.pdb
